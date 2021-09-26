@@ -1,0 +1,35 @@
+{% extends "Forum/Base.html" %}
+{% block content %}
+    <div class="card border-top pt-3" style="width: 36rem;">
+        <div class="card-body">
+            <img class="rounded-circle" src="{{ object.author.profile.image.url }}"
+            <br>
+            <h5 class="card-title">{{ object.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">By {{ object.author }} on {{ object.date_posted }}</h6>
+            <p class="card-text">{{ object.content }}</p>
+            {% if post.files %}
+                <p class="card-text"><a href="{{ post.files }}"></a>{{ post.files }}</p>
+                <a href="{localhost:8000{MEDIA_URL}}{{post.files.url}}" class="btn btn-info mx-4" download>Download</a> 
+            {% endif %} 
+            {%if object.author == user%}
+                <a class="btn btn-primary" href="{% url 'post-update' object.id %}" role="button">Update</a>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <h2>Comments</h2>
+    {%if not post.reply.all %}
+        <a class="btn btn-primary" href="{% url 'post-reply' post.pk %}" role="button">Reply</a>
+    {% else %}
+        {% for reply in post.reply.all %}
+            <div class="card border-top pt-3" style="width: 30rem;">
+                <div class="card-body">
+                    <br>
+                    <h6 class="card-subtitle mb-2 text-muted">By {{ reply.author }} on {{ reply.date_posted }}</h6>
+                    <p class="card-text">{{ reply.content }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        <a class="btn btn-primary" href="{% url 'post-reply' post.pk %}" role="button">Reply</a>
+    {% endif %}
+{% endblock content %}
